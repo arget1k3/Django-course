@@ -2,7 +2,10 @@ from django.shortcuts import redirect, render
 from django.http import HttpResponse, HttpResponseNotFound, Http404
 
 def index(request):
-    return render(request, '')
+    return render(request, 'women/index.html')
+
+def about(request):
+    return render(request, 'women/about.html')
 
 def categories(request, catid):
     if(request.POST):
