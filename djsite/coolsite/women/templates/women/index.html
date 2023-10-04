@@ -2,9 +2,15 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Главная страница</title>
+    <title>{{title}}</title>
 </head>
 <body>
-    
+
+<ul>
+{%for m in menu%}
+<li>{{m}}</li>
+{%endfor%}
+</ul>    
+
 </body>
 </html>
