@@ -37,3 +37,6 @@ def show_post(request, post_id):
 
 def pageNotFound(request, exception):
     return HttpResponseNotFound('<h1>Страница не найдена</h1>')
+
+def show_category(request, cat_id):
+    return HttpResponse(f'Отображение категории с id={cat_id}')
