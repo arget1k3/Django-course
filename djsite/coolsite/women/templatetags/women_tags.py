@@ -32,7 +32,7 @@ def show_posts(filter=None):
     if not filter:
         posts = Women.objects.all()
     else:
-        filter = 1 if filter == 'aktrisy' else 2 ##костыль
+        filter = 1 if filter == 'aktrisy' else 2 ##crutch
         posts = Women.objects.filter(cat_id=filter)  
 
     if len(posts) == 0:
