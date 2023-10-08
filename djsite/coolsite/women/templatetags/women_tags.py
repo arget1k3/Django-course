@@ -28,10 +28,11 @@ def get_posts(filter=None):
         return Women.objects.filter(cat_id=filter)
 
 @register.inclusion_tag('women/list_posts.html')
-def show_post(filter=None):
+def show_posts(filter=None):
     if not filter:
         posts = Women.objects.all()
     else:
+        filter = 1 if filter == 'aktrisy' else 2 ##костыль
         posts = Women.objects.filter(cat_id=filter)  
 
     if len(posts) == 0:

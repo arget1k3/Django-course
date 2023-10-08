@@ -1,4 +1,4 @@
-from django.shortcuts import redirect, render
+from django.shortcuts import get_object_or_404, redirect, render
 from django.http import HttpResponse, HttpResponseNotFound, Http404
 
 menu = [{'title': 'О сайте', 'url_name': 'about'},
@@ -32,18 +32,27 @@ def contact(request):
 def login(request):
     return HttpResponse('Авторизация')
 
-def show_post(request, post_id): 
-    return HttpResponse(f'Отображение статьи с id={post_id}')
+def show_post(request, post_slug): 
+    post = get_object_or_404(Women, slug=post_slug)
+
+    context =  {
+        'post': post,
+        'menu': menu,
+        'title': post.title,
+        'cat_selected': post.cat_id,
+        }
+
+    return render(request, 'women/post.html', context=context)
 
 def pageNotFound(request, exception):
     return HttpResponseNotFound('<h1>Страница не найдена</h1>')
 
-def show_category(request, cat_id):
+def show_category(request, cat_slug):
 
     context =  {
         'menu': menu,
         'title': '',
-        'cat_selected': cat_id,
+        'cat_selected': cat_slug,
         }
     
     return render(request, 'women/index.html', context=context)
