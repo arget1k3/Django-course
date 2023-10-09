@@ -30,10 +30,9 @@ def get_posts(filter=None):
 @register.inclusion_tag('women/list_posts.html')
 def show_posts(filter=None):
     if not filter:
-        posts = Women.objects.all()
+        posts = Women.objects.filter(is_published=True)
     else:
-        filter = 1 if filter == 'aktrisy' else 2 ##crutch
-        posts = Women.objects.filter(cat_id=filter)  
+        posts = Women.objects.filter(cat_id=filter, is_published=True)  
 
     if len(posts) == 0:
         raise Http404    

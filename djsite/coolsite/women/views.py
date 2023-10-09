@@ -1,7 +1,12 @@
+from typing import Any
+from django.db.models.query import QuerySet
 from django.shortcuts import get_object_or_404, redirect, render
 from django.http import HttpResponse, HttpResponseNotFound, Http404
+from django.urls import reverse_lazy
+from django.views.generic import ListView, DetailView, CreateView
 
 from .forms import *
+from .models import *
 
 menu = [{'title': 'О сайте', 'url_name': 'about'},
         {'title': 'Добавить статью', 'url_name': 'add_page'},
@@ -9,32 +14,52 @@ menu = [{'title': 'О сайте', 'url_name': 'about'},
         {'title': 'Войти', 'url_name': 'login'}
 ]
 
-from .models import *
+class WomenHome(ListView):
+    model = Women
+    template_name = 'women/index.html'
 
-
-def index(request):
-
-    context =  {
-        'menu': menu,
-        'title': 'Главная страница',
-        'cat_selected': 0,
-        }
+    def get_context_data(self, *, object_list=None, **kwargs: Any):
+        context = super().get_context_data(**kwargs)
+        context['menu'] = menu
+        context['title'] = 'Главная страница'
+        context['cat_selected'] = 0
+        return context
     
-    return render(request, 'women/index.html', context=context)
+
+# def index(request):
+
+#     context =  {
+#         'menu': menu,
+#         'title': 'Главная страница',
+#         'cat_selected': 0,
+#         }
+    
+#     return render(request, 'women/index.html', context=context)
 
 def about(request):
     return render(request, 'women/about.html', {'menu': menu, 'title': 'О сайте'})
 
-def addpage(request):
-    if request.method == 'POST':
-        form = AddPostForm(request.POST, request.FILES)
-        if form.is_valid():
-            # print(form.cleaned_data)
-            form.save()
-            return redirect('home')
-    else:        
-        form = AddPostForm()
-    return render(request, 'women/addpage.html', {'form': form, 'menu': menu, 'title': 'Добавление статьи'})
+class AddPage(CreateView):
+    form_class = AddPostForm
+    template_name = 'women/addpage.html'
+    success_url = reverse_lazy('home')
+
+    def get_context_data(self, *, object_list=None, **kwargs: Any):
+        context = super().get_context_data(**kwargs)
+        context['menu'] = menu
+        context['title'] = 'Добавление статьи'
+        return context
+
+# def addpage(request):
+#     if request.method == 'POST':
+#         form = AddPostForm(request.POST, request.FILES)
+#         if form.is_valid():
+#             # print(form.cleaned_data)
+#             form.save()
+#             return redirect('home')
+#     else:        
+#         form = AddPostForm()
+#     return render(request, 'women/addpage.html', {'form': form, 'menu': menu, 'title': 'Добавление статьи'})
 
 def contact(request):
     return HttpResponse('Обратная связь')
@@ -42,27 +67,46 @@ def contact(request):
 def login(request):
     return HttpResponse('Авторизация')
 
-def show_post(request, post_slug): 
-    post = get_object_or_404(Women, slug=post_slug)
+# def show_post(request, post_slug): 
+#     post = get_object_or_404(Women, slug=post_slug)
 
-    context =  {
-        'post': post,
-        'menu': menu,
-        'title': post.title,
-        'cat_selected': post.cat_id,
-        }
+#     context =  {
+#         'post': post,
+#         'menu': menu,
+#         'title': post.title,
+#         'cat_selected': post.cat_id,
+#         }
 
-    return render(request, 'women/post.html', context=context)
+#     return render(request, 'women/post.html', context=context)
+
+class ShowPost(DetailView):
+    model = Women
+    template_name = 'women/post.html'
+    slug_url_kwarg = 'post_slug'
+    context_object_name = 'post'
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = context['post']
+        context['menu'] = menu
+        return context
 
 def pageNotFound(request, exception):
     return HttpResponseNotFound('<h1>Страница не найдена</h1>')
 
-def show_category(request, cat_slug):
+class WomenCategory(ListView):
+    model = Women
+    template_name = 'women/index.html'
+    context_object_name = 'posts'
+    allow_empty = False
 
-    context =  {
-        'menu': menu,
-        'title': '',
-        'cat_selected': cat_slug,
-        }
-    
-    return render(request, 'women/index.html', context=context)
+    def get_queryset(self):
+        return Women.objects.filter(cat__slug=self.kwargs['cat_slug'], is_published=True)
+
+    def get_context_data(self, *, object_list=None, **kwargs: Any):
+        context = super().get_context_data(**kwargs)
+        context['menu'] = menu
+        context['title'] = 'Категория - ' + str(context['posts'][0].cat)
+        context['cat_selected'] = context['posts'][0].cat_id
+        return context
+        
