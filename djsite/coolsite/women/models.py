@@ -1,5 +1,6 @@
 from django.db import models
 from django.urls import reverse
+from django.db.models import Count
 
 class Women(models.Model):
     title = models.CharField(max_length=255, verbose_name='Заголовок')
