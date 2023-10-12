@@ -21,13 +21,17 @@ class WomenHome(DataMixin, ListView):
         c_def = self.get_user_context(title='Главная страница')
         return dict(list(context.items()) + list(c_def.items()))
     
+    def get_queryset(self):
+        return Women.objects.filter(is_published=True)
+    
 def about(request):
-    contact_list = Women.objects.all()
+    contact_list = Women.objects.filter(is_published=True)
     paginator = Paginator(contact_list, 3)
 
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
     return render(request, 'women/about.html', {'page_obj': page_obj, 'menu': menu, 'title': 'О сайте'})
+
 
 class AddPage(LoginRequiredMixin, DataMixin, CreateView):
     form_class = AddPostForm

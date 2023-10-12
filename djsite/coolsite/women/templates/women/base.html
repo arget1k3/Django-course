@@ -52,7 +52,7 @@
 {% endfor %}		
 
 		<li class="share">
-		<p>Мы в Linkedin</p>
+		<p>Курсы с ютуб-канала</p>
 		<!-- <a href="https://www.youtube.com/channel/UClJzWfGWuGJL2t-3dYKcHTA/playlists"><img src="/djsite/coolsite/women/static/women/images/share_yt1.png"></a> -->
 		<a class="share-yt" href="https://www.youtube.com/channel/UClJzWfGWuGJL2t-3dYKcHTA/playlists" target="_blank" rel="nofollow"></a>
 		</li>
@@ -71,27 +71,26 @@
 {% if page_obj.has_other_pages %}
 <nav class="list-pages">
 	<ul>
-		
 {% if page_obj.has_previous %}
-<li calss="page-num">
-	<a href="?page={{ page_obj.previous_page_number }}">&lt;</a>
-</li>
+<a href="?page={{ page_obj.previous_page_number }}">
+	<li class="page-num">&lt;</li>
+</a>
 {% endif %}
 
-		{% for p in paginator.page_range %}
+		{% for p in page_obj.paginator.page_range %}
 		{% if page_obj.number == p %}
 		<li class="page-num page-num-selected">{{ p }}</li>
 		{% elif p >= page_obj.number|add:-2 and page_obj.number|add:2 >= p %}
-		<li class="page-num">
-			<a href="?page={{ p }}">{{ p }}</a>
-		</li>
+		<a href="?page={{ p }}">
+			<li class="page-num">{{ p }}</li>
+		</a>
 		{% endif %}
 		{% endfor %}
 
 {% if page_obj.has_next %}
-<li calss="page-num">
-	<a href="?page={{ page_obj.next_page_number }}">&gt;</a>
-</li>
+<a href="?page={{ page_obj.next_page_number }}">
+	<li class="page-num">&gt;</li>
+</a>
 {% endif %}
 
 	</ul>
@@ -105,7 +104,7 @@
 <!-- Footer -->
 <tr><td valign=top>
 	<div id="footer">
-		<p>&copy; 2021 Частичное или полное копирование информации с данного сайта для распространения на других ресурсах, в том числе и бумажных, строго запрещено.</p>
+		<p>&copy; 2023 Частичное или полное копирование информации с данного сайта для распространения на других ресурсах, в том числе и бумажных, строго запрещено.</p>
 	</div>
 </td></tr></table>
 <!-- Конец footer'а и страницы -->
