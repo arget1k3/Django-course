@@ -19,24 +19,6 @@ def show_categories(sort = None, cat_selected = 0):
         cats = Category.objects.order_by(sort) 
 
     return {'cats': cats, 'cat_selected': cat_selected}
-
-@register.simple_tag(name='getposts')
-def get_posts(filter=None):
-    if not filter:
-        return Women.objects.all()
-    else:
-        return Women.objects.filter(cat_id=filter)
-
-@register.inclusion_tag('women/list_posts.html')
-def show_posts(filter=None):
-    if not filter:
-        posts = Women.objects.filter(is_published=True)
-    else:
-        posts = Women.objects.filter(cat_id=filter, is_published=True)  
-
-    if len(posts) == 0:
-        raise Http404    
-
-    return {'posts': posts}       
+      
 
 
