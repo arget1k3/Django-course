@@ -1,5 +1,6 @@
 from .models import *
 from django.core.paginator import Paginator
+from django.core.cache import cache
 
 menu = [{'title': 'О сайте', 'url_name': 'about'},
         {'title': 'Добавить статью', 'url_name': 'add_page'},
@@ -11,7 +12,11 @@ class DataMixin:
 
     def get_user_context(self, **kwargs):
         context = kwargs
-        cats = Category.objects.annotate(Count('women'))
+        cats = cache.get('cats')
+        if not cats:
+            cats = Category.objects.annotate(Count('women'))
+            cache.set('cats', cats, 60)
+        # cats = Category.objects.annotate(Count('women'))
 
         user_menu = menu.copy()
         if not self.request.user.is_authenticated:

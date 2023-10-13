@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'debug_toolbar',
     'women.apps.WomenConfig',
 ]
 
@@ -48,6 +49,7 @@ MIDDLEWARE = [
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
+    "debug_toolbar.middleware.DebugToolbarMiddleware",
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
@@ -136,3 +138,14 @@ MEDIA_URL = '/media/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # LOGIN_REDIRECT_URL = '/'
+
+INTERNAL_IPS = [
+    "127.0.0.1",
+]
+
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.filebased.FileBasedCache',
+        'LOCATION': os.path.join(BASE_DIR, 'coolsite_cache'),
+    }
+}
