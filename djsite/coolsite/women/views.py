@@ -1,5 +1,5 @@
 from typing import Any
-from django.db.models.query import QuerySet
+# from django.db.models.query import QuerySet
 from django.shortcuts import get_object_or_404, redirect, render
 from django.http import HttpResponse, HttpResponseNotFound, Http404
 from django.urls import reverse_lazy
@@ -80,3 +80,13 @@ class WomenCategory(DataMixin, ListView):
                                         cat_selected = context['posts'][0].cat_id)
         return dict(list(context.items()) + list(c_def.items()))
         
+
+class RegisterUser(DataMixin, CreateView):
+    form_class = RegisterUserForm
+    template_name = 'women/register.html'
+    success_url = reverse_lazy('login')
+
+    def get_context_data(self, *, object_list=None, **kwargs: Any):
+        context = super().get_context_data(**kwargs)
+        c_def = self.get_user_context(title='Регистрация')
+        return dict(list(context.items()) + list(c_def.items()))
