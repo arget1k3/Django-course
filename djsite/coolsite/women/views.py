@@ -28,12 +28,13 @@ class WomenHome(DataMixin, ListView):
         return Women.objects.filter(is_published=True).select_related('cat')
     
 def about(request):
-    contact_list = Women.objects.filter(is_published=True)
-    paginator = Paginator(contact_list, 3)
+    contact_list = Women.objects.filter(pk=15)
+    # paginator = Paginator(contact_list, 3)
 
-    page_number = request.GET.get('page')
-    page_obj = paginator.get_page(page_number)
-    return render(request, 'women/about.html', {'page_obj': page_obj, 'menu': menu, 'title': 'О сайте'})
+    # page_number = request.GET.get('page')
+    # page_obj = paginator.get_page(page_number)
+    return render(request, 'women/about.html', {'menu': menu, 'title': 'О сайте'})
+
 
 
 class AddPage(LoginRequiredMixin, DataMixin, CreateView):
@@ -87,7 +88,7 @@ class WomenCategory(DataMixin, ListView):
     model = Women
     template_name = 'women/index.html'
     context_object_name = 'posts'
-    allow_empty = False
+    allow_empty = False # определяет как обработать ситуацию, когда нет ни одного объекта в списке
 
     def get_queryset(self):
         return Women.objects.filter(cat__slug=self.kwargs['cat_slug'], is_published=True).select_related('cat')
@@ -98,7 +99,12 @@ class WomenCategory(DataMixin, ListView):
         c_def = self.get_user_context(title='Категория - ' + str(c.name),
                                         cat_selected = c.pk)
         return dict(list(context.items()) + list(c_def.items()))
-        
+    
+# class AboutMe(DataMixin, DetailView):
+#     model = Women
+#     template_name = 'women/about.html'
+#     context_object_name = 'post'
+    
 
 class RegisterUser(DataMixin, CreateView):
     form_class = RegisterUserForm

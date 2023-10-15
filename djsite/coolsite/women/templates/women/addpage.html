@@ -1,7 +1,6 @@
 {% extends 'women/base.html' %}
 
 {% block content %}
-<h1>{{ title }}</h1>
 
 <form action="{% url 'add_page' %}" method="post" enctype="multipart/form-data">
     {% csrf_token %}
